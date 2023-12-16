@@ -21,7 +21,7 @@ namespace CoDLuaDecompiler.Decompiler.LuaFile.Structures.LuaConstant.Havok
             if (!String.IsNullOrEmpty(str) && str.Length > 10 && str.StartsWith("x64:"))
             {
                 // Grab the hash and check if we have it dehashed
-                var hash = Convert.ToUInt64(str.Substring(4), 16) & 0xFFFFFFFFFFFFFFF;
+                var hash = Convert.ToUInt64(str.Substring(4), 16) & 0x7FFFFFFFFFFFFFFF;
                 if (Decompiler.HashEntries.ContainsKey(hash))
                     str = Decompiler.HashEntries[hash];
                 else
