@@ -80,7 +80,7 @@ public class AssetExport : IAssetExport
             string filePath = file.Name;
             if (String.IsNullOrEmpty(filePath))
             {
-                ulong hashNumber = (ulong) (file.Hash & 0xFFFFFFFFFFFFFFF);
+                ulong hashNumber = (ulong) (file.Hash & 0x7FFFFFFFFFFFFFFF);
 
                 if (_hashEntries.ContainsKey(hashNumber))
                     filePath = _hashEntries[hashNumber];

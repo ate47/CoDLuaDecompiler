@@ -83,7 +83,7 @@ public class BlackOpsColdWar : IGame
             filesList.Add(new LuaFileData()
             {
                 Reader = new BinaryReader(new MemoryStream(luaFileData)),
-                Hash = luaFile.Hash & 0xFFFFFFFFFFFFFFF,
+                Hash = luaFile.Hash & 0x7FFFFFFFFFFFFFFF,
             });
         }
 

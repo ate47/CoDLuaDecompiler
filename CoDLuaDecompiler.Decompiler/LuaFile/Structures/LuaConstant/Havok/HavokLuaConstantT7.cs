@@ -22,8 +22,8 @@ namespace CoDLuaDecompiler.Decompiler.LuaFile.Structures.LuaConstant.Havok
             {
                 // Grab the hash and check if we have it dehashed
                 var hash = Convert.ToUInt64(str.Substring(4), 16) & 0x7FFFFFFFFFFFFFFF;
-                if (Decompiler.HashEntries.ContainsKey(hash))
-                    str = Decompiler.HashEntries[hash];
+                if (Decompiler.HashEntries.ContainsKey(hash & 0xFFFFFFFFFFFFFFF))
+                    str = Decompiler.HashEntries[hash & 0xFFFFFFFFFFFFFFF];
                 else
                     // Replace the hash with the masked version so it's easier to find the actual file back
                     str = $"x64:{hash:x}";
@@ -44,7 +44,7 @@ namespace CoDLuaDecompiler.Decompiler.LuaFile.Structures.LuaConstant.Havok
 
         protected override ulong ReadHash()
         {
-            return Reader.ReadUInt64() & 0xFFFFFFFFFFFFFFF;
+            return Reader.ReadUInt64() & 0x7FFFFFFFFFFFFFFF;
         }
     }
 }

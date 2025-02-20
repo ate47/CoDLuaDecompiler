@@ -25,16 +25,8 @@ namespace CoDLuaDecompiler.Decompiler.LuaFile.Structures.LuaConstant.LuaJit
         
         public LuaJitConstant(ulong num)
         {
-            if (Decompiler.HashEntries.ContainsKey(HashValue))
-            {
-                StringValue = Decompiler.HashEntries[HashValue];
-                Type = LuaJitConstantType.String;
-            }
-            else
-            {
-                Type = LuaJitConstantType.Hash;
-                HashValue = num;
-            }
+            Type = LuaJitConstantType.Hash;
+            HashValue = num;
         }
 
         public LuaJitConstant(LuaJitFunction func)
@@ -54,18 +46,17 @@ namespace CoDLuaDecompiler.Decompiler.LuaFile.Structures.LuaConstant.LuaJit
             Type = LuaJitConstantType.Boolean;
             BoolValue = boolean;
         }
-        
+
         public override string ToString()
         {
-            return Type switch
-            {
-                LuaJitConstantType.String => StringValue,
-                LuaJitConstantType.Number => NumberValue.ToString(CultureInfo.InvariantCulture),
-                LuaJitConstantType.Nil => "nil",
-                LuaJitConstantType.Boolean => BoolValue ? "true" : "false",
-                LuaJitConstantType.Function => Function.ToString(),
-                LuaJitConstantType.Table => Table.ToString(),
-                //LuaJitConstantType.Hash => $"0x{HashValue & 0xFFFFFFFFFFFFFFF:X}",
+            return Type switch {
+            LuaJitConstantType.String => StringValue,
+            LuaJitConstantType.Number => NumberValue.ToString(CultureInfo.InvariantCulture),
+            LuaJitConstantType.Nil => "nil",
+            LuaJitConstantType.Boolean => BoolValue ? "true" : "false",
+            LuaJitConstantType.Function => Function.ToString(),
+            LuaJitConstantType.Table => Table.ToString(),
+            LuaJitConstantType.Hash => "@\"" + (Decompiler.HashEntries.TryGetValue(HashValue & 0xFFFFFFFFFFFFFFF, out string? val) ? val : $"hash_{HashValue & 0x7FFFFFFFFFFFFFFF:X}") + "\"",
                 _ => "NULL"
             };
         }

@@ -32,11 +32,6 @@ namespace CoDLuaDecompiler.Decompiler.LuaFile.Structures.LuaConstant.Havok
                     break;
                 case HavokConstantType.THash:
                     HashValue = ReadHash();
-                    if (Decompiler.HashEntries.ContainsKey(HashValue))
-                    {
-                        StringValue = "@\"" + Decompiler.HashEntries[HashValue] + "\"";
-                        Type = HavokConstantType.TString;
-                    }
                     break;
                 case HavokConstantType.TNil:
                     break;
@@ -54,7 +49,6 @@ namespace CoDLuaDecompiler.Decompiler.LuaFile.Structures.LuaConstant.Havok
                 case HavokConstantType.TStruct:
                 case HavokConstantType.TUnk:
                     throw new NotImplementedException();
-                    break;
                 default:
                     break; // throw new ArgumentOutOfRangeException();
             }
@@ -73,7 +67,7 @@ namespace CoDLuaDecompiler.Decompiler.LuaFile.Structures.LuaConstant.Havok
                 HavokConstantType.TNumber => NumberValue.ToString(CultureInfo.InvariantCulture),
                 HavokConstantType.TNil => "nil",
                 HavokConstantType.TBoolean => BoolValue ? "true" : "false",
-                HavokConstantType.THash => $"@\"hash_{HashValue & 0x7FFFFFFFFFFFFFFF:X}\"",
+                HavokConstantType.THash => "@\"" + (Decompiler.HashEntries.TryGetValue(HashValue & 0xFFFFFFFFFFFFFFF, out string? val) ? val : $"hash_{HashValue & 0x7FFFFFFFFFFFFFFF:X}") + "\"",
                 _ => "NULL"
             };
         }

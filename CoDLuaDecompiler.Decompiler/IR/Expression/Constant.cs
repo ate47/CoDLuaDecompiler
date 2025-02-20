@@ -1,4 +1,6 @@
 using CoDLuaDecompiler.Decompiler.IR.Identifiers;
+using CoDLuaDecompiler.Decompiler.LuaFile.Structures.LuaConstant.LuaJit;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -79,13 +81,13 @@ namespace CoDLuaDecompiler.Decompiler.IR.Expression
             switch (Type)
             {
                 case Identifiers.ValueType.Number:
-                    return Number.ToString();
+                    return Number.ToString(CultureInfo.InvariantCulture);
                 case Identifiers.ValueType.String:
                     return "\"" + String + "\"";
                 case Identifiers.ValueType.Boolean:
                     return Boolean ? "true" : "false";
                 case Identifiers.ValueType.Hash:
-                    return $"@\"hash_{Hash & 0x7FFFFFFFFFFFFFFF:X}\"";
+                    return "@\"" + (Decompiler.HashEntries.TryGetValue(Hash & 0xFFFFFFFFFFFFFFF, out string? val) ? val : $"hash_{Hash & 0x7FFFFFFFFFFFFFFF:X}") + "\"";
                 case Identifiers.ValueType.Table:
                     return "{}";
                 case Identifiers.ValueType.VarArgs:
