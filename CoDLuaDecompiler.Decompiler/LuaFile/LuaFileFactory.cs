@@ -57,7 +57,31 @@ namespace CoDLuaDecompiler.Decompiler.LuaFile
             }
 
             using var stream = File.OpenRead(filePath);
-            using var reader = new BinaryReader(stream);
+            BinaryReader? reader;
+            
+            int b1 = stream.ReadByte();
+            stream.Seek(0, SeekOrigin.Begin);
+            
+            if (b1 == 0x78)
+            {
+                // zlib file, need decompress
+                byte[] buffer = new byte[0x1000];
+                using (MemoryStream ms = new MemoryStream())
+                using (ZLibStream zlibStream = new ZLibStream(stream, CompressionMode.Decompress, false))
+                {
+                    int read;
+                    while ((read = zlibStream.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        ms.Write(buffer, 0, read);
+                    }
+                    reader = new BinaryReader(new MemoryStream(ms.ToArray()));
+                }
+
+            }
+            else
+            {
+                reader = new BinaryReader(stream);
+            }
 
             return Create(reader, filePath, usesDebugInfo);
         }
